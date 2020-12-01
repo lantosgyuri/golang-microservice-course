@@ -5,6 +5,7 @@ import (
 	"net/http"
 )
 
-func create(c *gin.Context) {
+// CreateRepo handle the create route
+func CreateRepo(c *gin.Context) {
 	c.JSON(http.StatusOK, "It works")
 }

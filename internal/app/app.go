@@ -1,16 +1,16 @@
 package app
 
 import (
-	"net/http"
+	"github.com/gin-gonic/gin"
+	"github.com/lantosgyuri/golang-microservices-course/internal/pkg/create-repo/controllers"
 )
 
 // StartApp start sets up the server
 func StartApp() {
-	http.HandleFunc("/", func(response http.ResponseWriter, req *http.Request) {
-		response.Write([]byte("IT WORKS"))
-	})
+	router := gin.Default()
+	router.GET("/create", controllers.CreateRepo)
 
-	if err := http.ListenAndServe(":8080", nil); err != nil {
+	if err := router.Run(":8080"); err != nil {
 		panic(err)
 	}
 }
