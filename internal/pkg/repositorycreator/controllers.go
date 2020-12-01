@@ -1,4 +1,4 @@
-package controllers
+package repositorycreator
 
 import (
 	"github.com/gin-gonic/gin"
