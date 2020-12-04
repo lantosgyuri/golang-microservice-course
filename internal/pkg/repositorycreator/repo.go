@@ -9,8 +9,7 @@ type Repo struct {
 
 // RepoRequest is the name of the repository what will be created
 type RepoRequest struct {
-	Name        string
-	Description string
-	Homepage    string
-	Private     bool
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Private     bool   `json:"private"`
 }

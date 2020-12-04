@@ -30,7 +30,6 @@ func TestCreate(t *testing.T) {
 		resp, err := s.Create(&repositorycreator.RepoRequest{
 			Name:        "Name",
 			Description: "Description",
-			Homepage:    "homepga",
 			Private:     true,
 		})
 
@@ -62,7 +61,6 @@ func TestCreate(t *testing.T) {
 		resp, err := s.Create(&repositorycreator.RepoRequest{
 			Name:        "Name",
 			Description: "Description",
-			Homepage:    "homepga",
 			Private:     true,
 		})
 
@@ -100,7 +98,6 @@ func TestCreate(t *testing.T) {
 		resp, err := s.Create(&repositorycreator.RepoRequest{
 			Name:        "Repo",
 			Description: "Description",
-			Homepage:    "homepga",
 			Private:     true,
 		})
 
@@ -112,8 +109,6 @@ func TestCreate(t *testing.T) {
 
 		assert.NotNil(t, resp)
 		assert.Equal(t, want.Name, resp.Name)
-		assert.Equal(t, want.HomePage, resp.HomePage)
-		assert.Equal(t, want.HomePage, resp.HomePage)
 		assert.Equal(t, want.IsAdmin, resp.IsAdmin)
 		assert.Nil(t, err)
 	})
