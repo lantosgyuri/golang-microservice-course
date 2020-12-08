@@ -90,4 +90,41 @@ func TestCreateMultipleRepos(t *testing.T) {
 		assert.Equal(t, want.Errors[0].StatusCode, resp.Errors[0].StatusCode)
 		assert.Nil(t, resp.Repos)
 	})
+
+	t.Run("5 good request", func(t *testing.T) {
+		mCreate := func(request *RepoRequest) (*Repo, *RepoError) {
+			return nil, &RepoError{
+				StatusCode: http.StatusBadRequest,
+				Message:    "Something went wrong",
+			}
+		}
+		p := testProvider{
+			mockedCreate: mCreate,
+		}
+		s := Service{
+			Provider: &p,
+		}
+
+		r := []*RepoRequest{
+			&RepoRequest{
+				Name:        "Name",
+				Description: "Description",
+				Private:     true,
+			},
+		}
+
+		resp := s.CreateMutlipleRepos(r)
+
+		want := MultitpleRepoResponse{
+			Errors: []RepoError{
+				RepoError{
+					StatusCode: http.StatusBadRequest,
+					Message:    "Something went wrong",
+				},
+			},
+		}
+
+		assert.Equal(t, want.Errors[0].StatusCode, resp.Errors[0].StatusCode)
+		assert.Nil(t, resp.Repos)
+	})
 }
