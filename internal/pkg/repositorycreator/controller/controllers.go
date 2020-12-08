@@ -4,7 +4,7 @@ import (
 	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/lantosgyuri/golang-microservices-course/internal/pkg/repositorycreator"
-	"github.com/lantosgyuri/golang-microservices-course/internal/pkg/repositorycreator/github"
+	"github.com/lantosgyuri/golang-microservices-course/internal/pkg/repositorycreator/provider/github"
 	"net/http"
 )
 
@@ -30,7 +30,7 @@ func CreateRepo(c *gin.Context) {
 		return
 	}
 
-	resp, error := service.Create(&request)
+	resp, error := service.CreateSingleRepo(&request)
 
 	if error != nil {
 		c.JSON(error.StatusCode, ErrorResponse{
@@ -43,11 +43,13 @@ func CreateRepo(c *gin.Context) {
 	c.JSON(http.StatusOK, resp)
 }
 
-func getRepoCreatorService(name string) (repositorycreator.Service, error) {
+func getRepoCreatorService(name string) (*repositorycreator.Service, error) {
 
 	switch name {
 	case "github":
-		return &github.Service{}, nil
+		return &repositorycreator.Service{
+			Provider: &github.Provider{},
+		}, nil
 	default:
 		return nil, errors.New("There is no provider with given name")
 	}

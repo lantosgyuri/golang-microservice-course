@@ -10,7 +10,7 @@ import (
 )
 
 func TestCreate(t *testing.T) {
-	s := Service{}
+	s := Provider{}
 	t.Run("Test status >200", func(t *testing.T) {
 		ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 			w.WriteHeader(http.StatusBadRequest)

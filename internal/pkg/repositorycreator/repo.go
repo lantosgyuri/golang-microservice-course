@@ -7,9 +7,15 @@ type Repo struct {
 	IsAdmin  bool
 }
 
-// RepoRequest is the name of the repository what will be created
+// RepoRequest holds the data of the repository what will be created
 type RepoRequest struct {
 	Name        string `json:"name"`
 	Description string `json:"description"`
 	Private     bool   `json:"private"`
+}
+
+// MultitpleRepoResponse holds the created Repos or Errors what occured during creation
+type MultitpleRepoResponse struct {
+	Repos  []Repo
+	Errors []RepoError
 }
