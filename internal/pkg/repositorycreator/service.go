@@ -1,8 +1,13 @@
 package repositorycreator
 
 import (
-	"fmt"
+	"sync"
 )
+
+type repoAndError struct {
+	rep    *Repo
+	repErr *RepoError
+}
 
 // Creator holds the logic what this package can do for you
 type Creator interface {
@@ -23,22 +28,45 @@ func (s *Service) CreateSingleRepo(request *RepoRequest) (*Repo, *RepoError) {
 // CreateMutlipleRepos creates a single repository
 func (s *Service) CreateMutlipleRepos(multipleRequests []*RepoRequest) *MultitpleRepoResponse {
 
-	resp, err := s.Provider.Create(&RepoRequest{
-		Name:        "Name",
-		Description: "Description",
-		Private:     true,
-	})
+	var wg sync.WaitGroup
+	respChan := make(chan *repoAndError)
+	resultChan := make(chan *MultitpleRepoResponse)
 
-	var responses MultitpleRepoResponse
+	for _, req := range multipleRequests {
+		wg.Add(1)
+		go func(output chan *repoAndError, request *RepoRequest) {
+			resp, err := s.CreateSingleRepo(request)
 
-	fmt.Printf("RESPONSES %v", responses)
+			respChan <- &repoAndError{
+				rep:    resp,
+				repErr: err,
+			}
 
-	if err != nil {
-		responses.Errors = append(responses.Errors, *err)
-	} else {
-		responses.Repos = append(responses.Repos, *resp)
+		}(respChan, req)
 	}
 
-	return &responses
+	go s.handleResults(respChan, resultChan, &wg)
 
+	wg.Wait()
+	close(respChan)
+
+	responses := <-resultChan
+	return responses
+
+}
+
+func (s *Service) handleResults(respChan chan *repoAndError, result chan *MultitpleRepoResponse, wg *sync.WaitGroup) {
+	var responses MultitpleRepoResponse
+
+	for res := range respChan {
+		switch {
+		case res.rep != nil:
+			responses.Repos = append(responses.Repos, *res.rep)
+		case res.repErr != nil:
+			responses.Errors = append(responses.Errors, *res.repErr)
+		}
+		wg.Done()
+	}
+
+	result <- &responses
 }

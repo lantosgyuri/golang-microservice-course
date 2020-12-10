@@ -93,11 +93,13 @@ func TestCreateMultipleRepos(t *testing.T) {
 
 	t.Run("5 good request", func(t *testing.T) {
 		mCreate := func(request *RepoRequest) (*Repo, *RepoError) {
-			return nil, &RepoError{
-				StatusCode: http.StatusBadRequest,
-				Message:    "Something went wrong",
-			}
+			return &Repo{
+				Name:     request.Name,
+				HomePage: "test.test.test",
+				IsAdmin:  false,
+			}, nil
 		}
+
 		p := testProvider{
 			mockedCreate: mCreate,
 		}
@@ -111,20 +113,62 @@ func TestCreateMultipleRepos(t *testing.T) {
 				Description: "Description",
 				Private:     true,
 			},
+			&RepoRequest{
+				Name:        "Name1",
+				Description: "Description",
+				Private:     true,
+			},
+			&RepoRequest{
+				Name:        "Name2",
+				Description: "Description",
+				Private:     true,
+			},
+			&RepoRequest{
+				Name:        "Name3",
+				Description: "Description",
+				Private:     true,
+			},
+			&RepoRequest{
+				Name:        "Name4",
+				Description: "Description",
+				Private:     true,
+			},
 		}
 
 		resp := s.CreateMutlipleRepos(r)
 
 		want := MultitpleRepoResponse{
-			Errors: []RepoError{
-				RepoError{
-					StatusCode: http.StatusBadRequest,
-					Message:    "Something went wrong",
+			Repos: []Repo{
+				Repo{
+					Name:     "Name",
+					HomePage: "test.test.test",
+					IsAdmin:  false,
+				},
+				Repo{
+					Name:     "Name1",
+					HomePage: "test.test.test",
+					IsAdmin:  false,
+				},
+				Repo{
+					Name:     "Name2",
+					HomePage: "test.test.test",
+					IsAdmin:  false,
+				},
+				Repo{
+					Name:     "Name3",
+					HomePage: "test.test.test",
+					IsAdmin:  false,
+				},
+				Repo{
+					Name:     "Name4",
+					HomePage: "test.test.test",
+					IsAdmin:  false,
 				},
 			},
 		}
 
-		assert.Equal(t, want.Errors[0].StatusCode, resp.Errors[0].StatusCode)
-		assert.Nil(t, resp.Repos)
+		assert.Nil(t, resp.Errors)
+		assert.NotNil(t, resp.Repos)
+		assert.EqualValues(t, len(want.Repos), len(resp.Repos))
 	})
 }
