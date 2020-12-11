@@ -14,6 +14,11 @@ type RepoRequest struct {
 	Private     bool   `json:"private"`
 }
 
+// MultipleRepoRequest holds the data abaout the repositories what will be created
+type MultipleRepoRequest struct {
+	Repos []RepoRequest `json:"repos"`
+}
+
 // MultitpleRepoResponse holds the created Repos or Errors what occured during creation
 type MultitpleRepoResponse struct {
 	Repos  []Repo

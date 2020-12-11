@@ -50,3 +50,27 @@ func TestCreateRepoInvalidProvider(t *testing.T) {
 	assert.EqualValues(t, "There is no provider with given name", errResp.Message)
 
 }
+
+func TestCreateMultipleRepositoryInvalidJson(t *testing.T) {
+	response := httptest.NewRecorder()
+	c, _ := gin.CreateTestContext(response)
+	request, _ := http.NewRequest(http.MethodPost, "createMultiple", strings.NewReader(`{misssingQuote":[
+		{"name": "test4", "description": "testtest", "private": true},
+		{"name": "test5", "description": "testtest", "private": true},
+		{"name": "test6", "description": "testtest", "private": true}
+		]}`))
+
+	c.Request = request
+
+	CreateMultipleRepository(c)
+
+	assert.EqualValues(t, http.StatusBadRequest, response.Code)
+
+	var errResp ErrorResponse
+	if err := json.Unmarshal(response.Body.Bytes(), &errResp); err != nil {
+		fmt.Println("can not unmarshal errorResponse")
+	}
+
+	assert.EqualValues(t, "Invalid JSON body", errResp.Message)
+	assert.EqualValues(t, http.StatusBadRequest, errResp.StatusCode)
+}

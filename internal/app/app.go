@@ -9,8 +9,10 @@ import (
 func StartApp() {
 	router := gin.Default()
 	router.POST("/create/:provider", controller.CreateRepo)
+	router.POST("/createMultiple/:provider", controller.CreateMultipleRepository)
 
 	if err := router.Run(":8080"); err != nil {
 		panic(err)
 	}
+
 }
