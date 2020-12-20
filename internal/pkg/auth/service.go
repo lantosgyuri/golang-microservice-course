@@ -38,13 +38,6 @@ func (a *Authenticator) Validate(token Token) *Error {
 	})
 
 	if err != nil {
-		if err == jwt.ErrSignatureInvalid {
-			return &Error{
-				StatusCode: http.StatusUnauthorized,
-				Message:    "Token signature invalid",
-			}
-		}
-
 		return &Error{
 			StatusCode: http.StatusBadRequest,
 			Message:    "Is the token OK?",
