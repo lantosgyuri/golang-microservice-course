@@ -1,9 +1,9 @@
 # Golang microservice course
 
-This project is a rewritten version of the  **Introduction to industry REST microservices in Golang (Go)** course from Federico Leon (Udemy). The course uses MVC, but I wanted to learn more about the Hexagonal architecture so i have rewritten the whole course and trying to apply the HEX architecture.
+This project is a rewritten version of the  **Introduction to industry REST microservices in Golang (Go)** course from Federico Leon (Udemy). The course uses MVC, but I wanted to learn more about the Hexagonal architecture so i have rewritten the whole course and tied to apply the HEX architecture.
 
 
-# Frameworks used
+# Frameworks/Libs used
 
 Gin, testify, zap
 
